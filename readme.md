@@ -21,7 +21,7 @@ The goal of each of these projects is to be decoupled from each other. Meaning y
 
 
 ### The Server
-On the server you will utilize a node-mongodb setup with express sessions and a mongoose ORM. The server side code needs to be setup similar to your previous projects*. You will need to create a new free database at gearhost for this assignment. 
+On the server you will utilize a node-mongodb setup with express sessions and a mongoose ORM. The server side code needs to be setup similar to your previous projects*. You will need to create a new free database at atlas (use the connection string for 2.2.12) for this assignment. 
 
 *\* portions of this have already been done for you*
 
