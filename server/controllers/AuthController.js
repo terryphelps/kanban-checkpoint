@@ -14,7 +14,7 @@ export default class AuthController {
             .use(Authorize.authenticated)
             .get('/authenticate', this.authenticate)
             .delete('/logout', this.logout)
-            .use('*', this.defaultRoute)
+            .use(this.defaultRoute)
     }
 
     defaultRoute(req, res, next) {
@@ -22,7 +22,7 @@ export default class AuthController {
     }
     async register(req, res, next) {
         //VALIDATE PASSWORD LENGTH
-        if (req.body.password.length < 5) {
+        if (req.body.password.length < 6) {
             return res.status(400).send({
                 error: 'Password must be at least 6 characters'
             })
@@ -30,10 +30,10 @@ export default class AuthController {
         try {
             //CHANGE THE PASSWORD TO A HASHED PASSWORD
             req.body.hash = _us.generateHash(req.body.password)
+
             //CREATE THE USER
             let user = await _repo.create(req.body)
             //REMOVE THE PASSWORD BEFORE RETURNING
-            console.log("created")
             delete user._doc.hash
             //SET THE SESSION UID (SHORT FOR USERID)
             req.session.uid = user._id
@@ -46,7 +46,6 @@ export default class AuthController {
 
     async login(req, res, next) {
         try {
-
             let user = await _repo.findOne({ email: req.body.email })
             if (!user) {
                 return res.status(400).send("Invalid Username Or Password")

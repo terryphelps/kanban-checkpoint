@@ -26,7 +26,7 @@ export default class BoardsController {
   async getAll(req, res, next) {
     try {
       //only gets boards by user who is logged in
-      let data = await _repo.find({})
+      let data = await _repo.find({ authorId: req.session.uid })
       return res.send(data)
     }
     catch (err) { next(err) }
