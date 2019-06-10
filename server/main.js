@@ -1,7 +1,8 @@
-var express = require('express')
-var bp = require('body-parser')
-var server = express()
-var cors = require('cors')
+import express from 'express'
+import cors from 'cors'
+import bp from 'body-parser'
+
+const server = express()
 
 
 //Sets the port to Heroku's, and the files to the built project 
@@ -20,7 +21,7 @@ var corsOptions = {
 server.use(cors(corsOptions))
 
 //Fire up database connection
-require('./server-assets/db/gearhost-config')
+require('./db/dbconfig')
 
 
 //REGISTER MIDDLEWEAR
@@ -29,31 +30,22 @@ server.use(bp.urlencoded({
   extended: true
 }))
 
-//REGISTER YOUR AUTH ROUTES BEFORE YOUR GATEKEEPER, OTHERWISE YOU WILL NEVER GET LOGGED IN
-let auth = require('./server-assets/auth/routes')
-server.use(auth.session)
-server.use(auth.router)
+//REGISTER YOUR SESSION, OTHERWISE YOU WILL NEVER GET LOGGED IN
+import Session from "./middlewear/session"
+server.use(new Session().express)
 
 
-//Gate Keeper Must login to access any route below this code
-server.use((req, res, next) => {
-  if (!req.session.uid) {
-    return res.status(401).send({
-      error: 'please login to continue'
-    })
-  }
-  next()
-})
 
 //YOUR ROUTES HERE!!!!!!
-let boardRoutes = require('./server-assets/routes/board')
-server.use('/api/boards', boardRoutes)
+import BoardController from './controllers/BoardController'
+server.use('/api/boards', new BoardController().router)
 
 
 
-
-
-
+//Default Error Handler
+server.use((error, req, res, next) => {
+  res.status(error.status || 400).send({ error: { message: error.message } })
+})
 
 //Catch all
 server.use('*', (req, res, next) => {
