@@ -10,9 +10,9 @@ let _repo = _service.repository
 export default class BoardsController {
   constructor() {
     this.router = express.Router()
-      .use(Authorize.authenticated)
       .get('', this.getAll)
       .get('/:id', this.getById)
+      .use(Authorize.authenticated)
       .post('', this.create)
       .put('/:id', this.edit)
       .delete('/:id', this.delete)
@@ -26,7 +26,7 @@ export default class BoardsController {
   async getAll(req, res, next) {
     try {
       //only gets boards by user who is logged in
-      let data = await _repo.find({ authorId: req.session.uid })
+      let data = await _repo.find({})
       return res.send(data)
     }
     catch (err) { next(err) }
@@ -59,7 +59,7 @@ export default class BoardsController {
 
   async delete(req, res, next) {
     try {
-      await _repo.findOneAndDelete({ _id: req.params.id, authorId: req.session.uid })
+      await _repo.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
       return res.send("Successfully deleted")
     } catch (error) { next(error) }
   }

@@ -15,7 +15,7 @@ let _schema = new Schema({
 }, { timestamps: true })
 
 //schema.methods are used to add a method to a Model instance
-schema.methods.validatePassword = function (password) {
+_schema.methods.validatePassword = function (password) {
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, this.hash, function (err, isMatch) {
       if (err || !isMatch) {

@@ -1,5 +1,6 @@
 import express from 'express'
 import UserService from '../services/UserService';
+import { Authorize } from '../middlewear/authorize'
 
 let _us = new UserService()
 let _repo = _us.repository
@@ -10,6 +11,7 @@ export default class AuthController {
         this.router = express.Router()
             .post('/register', this.register)
             .post('/login', this.login)
+            .use(Authorize.authenticated)
             .get('/authenticate', this.authenticate)
             .delete('/logout', this.logout)
             .use('*', this.defaultRoute)
@@ -29,8 +31,9 @@ export default class AuthController {
             //CHANGE THE PASSWORD TO A HASHED PASSWORD
             req.body.hash = _us.generateHash(req.body.password)
             //CREATE THE USER
-            let user = await _us.repository.create(req.body)
+            let user = await _repo.create(req.body)
             //REMOVE THE PASSWORD BEFORE RETURNING
+            console.log("created")
             delete user._doc.hash
             //SET THE SESSION UID (SHORT FOR USERID)
             req.session.uid = user._id
@@ -65,7 +68,7 @@ export default class AuthController {
 
     async authenticate(req, res, next) {
         try {
-            let user await = Users.findById(req.session.uid)
+            let user = await _repo.findOne({ _id: req.session.uid })
             if (!user) {
                 return res.status(401).send({
                     error: 'Please login to continue'
@@ -75,6 +78,7 @@ export default class AuthController {
             res.send(user)
         }
         catch (err) {
+            console.error(err)
             res.status(500).send(err)
         }
     }
