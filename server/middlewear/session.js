@@ -1,9 +1,9 @@
 import expressSession from 'express-session'
-var mongoStore = require("connect-mongodb-session")(expressSession);
+import mongoose from "mongoose";
+var mongoStore = require("connect-mongo")(expressSession);
 
 var store = new mongoStore({
-    uri: "", //CHANGE ME!!!!!!
-    collection: "Sessions"
+    mongooseConnection: mongoose.connection
 });
 
 store.on("error", function (err) {

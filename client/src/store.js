@@ -2,17 +2,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Axios from 'axios'
 import router from './router'
+import AuthService from './AuthService'
 
 Vue.use(Vuex)
 
 //Allows axios to work locally or live
 let base = window.location.host.includes('localhost:8080') ? '//localhost:3000/' : '/'
-
-let auth = Axios.create({
-  baseURL: base + "auth/",
-  timeout: 3000,
-  withCredentials: true
-})
 
 let api = Axios.create({
   baseURL: base + "api/",
@@ -36,29 +31,33 @@ export default new Vuex.Store({
   },
   actions: {
     //#region -- AUTH STUFF --
-    register({ commit, dispatch }, newUser) {
-      auth.post('register', newUser)
-        .then(res => {
-          commit('setUser', res.data)
-          router.push({ name: 'boards' })
-        })
+    async register({ commit, dispatch }, creds) {
+      try {
+        let user = await AuthService.Register(creds)
+        commit('setUser', user)
+        router.push({ name: "boards" })
+      } catch (e) {
+        console.warn(e.message)
+      }
     },
-    authenticate({ commit, dispatch }) {
-      auth.get('authenticate')
-        .then(res => {
-          commit('setUser', res.data)
-          router.push({ name: 'boards' })
-        })
-        .catch(res => {
-          router.push({ name: 'login' })
-        })
+    async login({ commit, dispatch }, creds) {
+      try {
+        let user = await AuthService.Login(creds)
+        commit('setUser', user)
+        router.push({ name: "boards" })
+      } catch (e) {
+        console.warn(e.message)
+      }
     },
-    login({ commit, dispatch }, creds) {
-      auth.post('login', creds)
-        .then(res => {
-          commit('setUser', res.data)
-          router.push({ name: 'boards' })
-        })
+    async logout({ commit, dispatch }) {
+      try {
+        let success = await AuthService.Logout()
+        if (!success) { }
+        commit('resetState')
+        router.push({ name: "login" })
+      } catch (e) {
+        console.warn(e.message)
+      }
     },
     //#endregion
 

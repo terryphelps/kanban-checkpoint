@@ -1,9 +1,11 @@
 import express from 'express'
 import cors from 'cors'
 import bp from 'body-parser'
-
+import DbContext from "./db/dbconfig"
 const server = express()
 
+//Fire up database connection
+DbContext.connect()
 
 //Sets the port to Heroku's, and the files to the built project 
 var port = process.env.PORT || 3000
@@ -20,10 +22,6 @@ var corsOptions = {
 };
 server.use(cors(corsOptions))
 
-//Fire up database connection
-require('./db/dbconfig')
-
-
 //REGISTER MIDDLEWEAR
 server.use(bp.json())
 server.use(bp.urlencoded({
@@ -31,12 +29,10 @@ server.use(bp.urlencoded({
 }))
 
 //REGISTER YOUR SESSION, OTHERWISE YOU WILL NEVER GET LOGGED IN
-import Session from "./middlewear/session"
 import AuthController from './controllers/AuthController'
-
+import Session from "./middlewear/session"
 server.use(new Session().express)
-server.use('/auth', new AuthController().router)
-
+server.use('/account', new AuthController().router)
 
 
 //YOUR ROUTES HERE!!!!!!
