@@ -1,8 +1,5 @@
 <template>
-  <div class="board">
-    {{board.title}}
-    <!-- <list v-for="list in lists" :listData='list'></list> -->
-  </div>
+  <div class="board">{{board.title}}</div>
 </template>
 
 <script>

@@ -13,7 +13,7 @@ export default class AuthService {
       let res = await auth.post('login', creds)
       return res.data
     } catch (e) {
-      throw new Error('[login failed] :' + e.response.data)
+      throw new Error('[login failed] :' + e.response.data.error)
     }
   }
   static async Register(creds) {
@@ -21,7 +21,7 @@ export default class AuthService {
       let res = await auth.post('register', creds)
       return res.data
     } catch (e) {
-      throw new Error('[registration failed] :' + e.response.data)
+      throw new Error('[registration failed] :' + e.response.data.error)
     }
   }
   static async Logout() {
@@ -29,15 +29,15 @@ export default class AuthService {
       let res = await auth.delete('logout')
       return true
     } catch (e) {
-      throw new Error('[logout failed] :' + e.response.data)
+      throw new Error('[logout failed] :' + e.response.data.error)
     }
   }
-  static async Authenticate() { 
+  static async Authenticate() {
     try {
       let res = await auth.get('authenticate')
       return res.data
     } catch (e) {
-      console.warn('[Authentication failed] :' + e.response.data)
+      console.warn('[Authentication failed] :' + e.response.data.error)
     }
   }
 }
