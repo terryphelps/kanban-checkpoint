@@ -1,5 +1,3 @@
-
-
 export class Authorize {
     static authenticated(req, res, next) {
         if (!req.session.uid) {

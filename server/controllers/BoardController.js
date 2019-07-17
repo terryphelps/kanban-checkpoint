@@ -1,18 +1,14 @@
-import BoardService from '../services/BoardService'
+import _boardService from '../services/BoardService'
 import express from 'express'
-import { Authorize } from '../middlewear/authorize'
-
-//import service and create an instance
-let _service = new BoardService()
-let _repo = _service.repository
+import { Authorize } from '../middleware/authorize.js'
 
 //PUBLIC
 export default class BoardsController {
   constructor() {
     this.router = express.Router()
+      .use(Authorize.authenticated)
       .get('', this.getAll)
       .get('/:id', this.getById)
-      .use(Authorize.authenticated)
       .post('', this.create)
       .put('/:id', this.edit)
       .delete('/:id', this.delete)
@@ -26,7 +22,7 @@ export default class BoardsController {
   async getAll(req, res, next) {
     try {
       //only gets boards by user who is logged in
-      let data = await _repo.find({ authorId: req.session.uid })
+      let data = await _boardService.find({ authorId: req.session.uid })
       return res.send(data)
     }
     catch (err) { next(err) }
@@ -34,7 +30,7 @@ export default class BoardsController {
 
   async getById(req, res, next) {
     try {
-      let data = await _repo.findOne({ _id: req.params.id, authorId: req.session.uid })
+      let data = await _boardService.findOne({ _id: req.params.id, authorId: req.session.uid })
       return res.send(data)
     } catch (error) { next(error) }
   }
@@ -42,14 +38,14 @@ export default class BoardsController {
   async create(req, res, next) {
     try {
       req.body.authorId = req.session.uid
-      let data = await _repo.create(req.body)
+      let data = await _boardService.create(req.body)
       return res.status(201).send(data)
     } catch (error) { next(error) }
   }
 
   async edit(req, res, next) {
     try {
-      let data = await _repo.findOneAndUpdate({ _id: req.params.id, authorId: req.session.uid }, req.body, { new: true })
+      let data = await _boardService.findOneAndUpdate({ _id: req.params.id, authorId: req.session.uid }, req.body, { new: true })
       if (data) {
         return res.send(data)
       }
@@ -59,7 +55,7 @@ export default class BoardsController {
 
   async delete(req, res, next) {
     try {
-      await _repo.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      await _boardService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
       return res.send("Successfully deleted")
     } catch (error) { next(error) }
   }

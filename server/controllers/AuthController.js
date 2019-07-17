@@ -1,9 +1,7 @@
 import express from 'express'
-import UserService from '../services/UserService';
-import { Authorize } from '../middlewear/authorize'
+import _userService from '../services/UserService';
+import { Authorize } from '../middleware/authorize'
 
-let _us = new UserService()
-let _repo = _us.repository
 
 //PUBLIC
 export default class AuthController {
@@ -29,10 +27,10 @@ export default class AuthController {
         }
         try {
             //CHANGE THE PASSWORD TO A HASHED PASSWORD
-            req.body.hash = _us.generateHash(req.body.password)
+            req.body.hash = _userService.generateHash(req.body.password)
 
             //CREATE THE USER
-            let user = await _repo.create(req.body)
+            let user = await _userService.create(req.body)
             //REMOVE THE PASSWORD BEFORE RETURNING
             delete user._doc.hash
             //SET THE SESSION UID (SHORT FOR USERID)
@@ -46,7 +44,7 @@ export default class AuthController {
 
     async login(req, res, next) {
         try {
-            let user = await _repo.findOne({ email: req.body.email })
+            let user = await _userService.findOne({ email: req.body.email })
             if (!user) {
                 return res.status(400).send("Invalid Username Or Password")
             }
@@ -67,7 +65,7 @@ export default class AuthController {
 
     async authenticate(req, res, next) {
         try {
-            let user = await _repo.findOne({ _id: req.session.uid })
+            let user = await _userService.findOne({ _id: req.session.uid })
             if (!user) {
                 return res.status(401).send({
                     error: 'Please login to continue'
