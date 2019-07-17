@@ -8,8 +8,8 @@ mongoose.connection.on('error', err => {
   console.error('[DATABASE ERROR]:', err)
 })
 
-//THIS STRING WILL CHANGE SLIGHTLY
-const connectionString = "mongodb+srv://student:student123@classroom-afyyj.mongodb.net/test?retryWrites=true&w=majority"
+//TODO: ADD YOUR CONNECTION STRING!!!
+const connectionString = "" 
 
 export default class DbContext {
   static async connect() {
