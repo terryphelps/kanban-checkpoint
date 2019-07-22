@@ -14,7 +14,7 @@ export default new Router({
       component: Boards
     },
     {
-      path: '/board/:boardId',
+      path: '/boards/:boardId',
       name: 'board',
       props: true,
       component: Board
