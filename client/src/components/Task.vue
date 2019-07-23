@@ -1,6 +1,6 @@
 <template>
   <div class="Task border">
-    <drag class="drag" :transter-data="{taskId}">
+    <drag class="drag" :transfer-data="task">
       <p>{{ task.description }}
       </p>
       <Comment v-for="comment in comments" :key='comment._id' :commentId="comment._id"></Comment>

@@ -118,6 +118,12 @@ export default new Vuex.Store({
           dispatch('getTasks', taskData.boardId)
         })
     },
+    setTask({ commit, dispatch }, taskData) {
+      api.put('tasks/' + taskData._id, taskData)
+        .then(res => {
+          dispatch('getTasks', taskData.boardId)
+        })
+    },
     //#endregion
 
     //#region -- COMMENTS --

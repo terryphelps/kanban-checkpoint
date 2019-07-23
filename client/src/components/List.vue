@@ -1,11 +1,13 @@
 <template>
   <div class="List col-3 border">
-    <p>{{list.title}}</p>
-    <Task v-for='task in tasks' :key="task._id" :taskId="task._id"></Task>
-    <form class="border" @submit.prevent="addTask">
-      <input v-model="message">
-      <button class="btn">Add Task</button>
-    </form>
+    <drop class="drop" @drop="handleDrop">
+      <p>{{list.title}}</p>
+      <Task v-for='task in tasks' :key="task._id" :taskId="task._id"></Task>
+      <form class="border" @submit.prevent="addTask">
+        <input v-model="message">
+        <button class="btn">Add Task</button>
+      </form>
+    </drop>
   </div>
 </template>
 
@@ -37,6 +39,13 @@
         let output = this.$store.dispatch('addTask', { description: this.message, listId: this.listId, boardId: this.list.boardId })
         this.message = ''
         return output
+      },
+      handleDrop(data, event) {
+
+        let task = data
+        task.listId = this.listId
+
+        this.$store.dispatch("setTask", task)
       }
     },
     components: {
