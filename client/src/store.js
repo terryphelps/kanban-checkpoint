@@ -19,6 +19,9 @@ export default new Vuex.Store({
   state: {
     user: {},
     boards: [],
+    lists: [],
+    tasks: [],
+    comments: [],
     activeBoard: {}
   },
   mutations: {
@@ -27,6 +30,15 @@ export default new Vuex.Store({
     },
     setBoards(state, boards) {
       state.boards = boards
+    },
+    setLists(state, lists) {
+      state.lists = lists
+    },
+    setTasks(state, tasks) {
+      state.tasks = tasks
+    },
+    setComments(state, comments) {
+      state.comments = comments
     }
   },
   actions: {
@@ -74,14 +86,59 @@ export default new Vuex.Store({
         .then(serverBoard => {
           dispatch('getBoards')
         })
-    }
+    },
     //#endregion
 
-
     //#region -- LISTS --
+    getLists({ commit, dispatch }, boardId) {
+      api.get('boards/' + boardId + '/lists')
+        .then(res => {
+          commit('setLists', res.data)
+        })
+    },
+    addList({ commit, dispatch }, listData) {
+      debugger
+      api.post('lists', listData)
+        .then(res => {
+          dispatch('getLists', listData.boardId)
+        })
+    },
+    //#endregion
 
+    //#region -- TASKS --
+    getTasks({ commit, dispatch }, boardId) {
+      api.get('boards/' + boardId + '/tasks')
+        .then(res => {
+          commit('setTasks', res.data)
+        })
+    },
+    addTask({ commit, dispatch }, taskData) {
+      api.post('tasks', taskData)
+        .then(res => {
+          dispatch('getTasks', taskData.boardId)
+        })
+    },
+    //#endregion
 
-
+    //#region -- COMMENTS --
+    getComments({ commit, dispatch }, boardId) {
+      api.get('boards/' + boardId + '/comments')
+        .then(res => {
+          commit('setComments', res.data)
+        })
+    },
+    addComment({ commit, dispatch }, commentData) {
+      api.post('comments', commentData)
+        .then(res => {
+          dispatch('getComments', commentData.boardId)
+        })
+    },
+    deleteComment({ commit, dispatch }, payload) {
+      api.delete('comments/' + payload.commentId)
+        .then(res => {
+          dispatch('getComments', payload.boardId)
+        })
+    }
     //#endregion
   }
 })

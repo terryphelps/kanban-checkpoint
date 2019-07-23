@@ -1,6 +1,9 @@
 import _boardService from '../services/BoardService'
 import express from 'express'
 import { Authorize } from '../middleware/authorize.js'
+import _listService from '../services/ListService'
+import _taskService from '../services/TaskService'
+import _commentService from '../services/CommentService'
 
 //PUBLIC
 export default class BoardsController {
@@ -9,6 +12,9 @@ export default class BoardsController {
       .use(Authorize.authenticated)
       .get('', this.getAll)
       .get('/:id', this.getById)
+      .get('/:id/lists', this.getBoardLists)
+      .get('/:id/tasks', this.getBoardTasks)
+      .get('/:id/comments', this.getBoardComments)
       .post('', this.create)
       .put('/:id', this.edit)
       .delete('/:id', this.delete)
@@ -31,6 +37,25 @@ export default class BoardsController {
   async getById(req, res, next) {
     try {
       let data = await _boardService.findOne({ _id: req.params.id, authorId: req.session.uid })
+      return res.send(data)
+    } catch (error) { next(error) }
+  }
+
+  async getBoardLists(req, res, next) {
+    try {
+      let data = await _listService.find({ boardId: req.params.id, authorId: req.session.uid })
+      return res.send(data)
+    } catch (error) { next(error) }
+  }
+  async getBoardTasks(req, res, next) {
+    try {
+      let data = await _taskService.find({ boardId: req.params.id, authorId: req.session.uid })
+      return res.send(data)
+    } catch (error) { next(error) }
+  }
+  async getBoardComments(req, res, next) {
+    try {
+      let data = await _commentService.find({ boardId: req.params.id, authorId: req.session.uid })
       return res.send(data)
     } catch (error) { next(error) }
   }

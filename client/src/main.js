@@ -3,6 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import AuthService from "./AuthService"
+import { Drag, Drop } from 'vue-drag-drop'
+
+Vue.component('drag', Drag);
+Vue.component('drop', Drop);
 
 //Vue.config.productionTip = false
 
