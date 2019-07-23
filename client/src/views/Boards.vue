@@ -1,6 +1,7 @@
 <template>
   <div class="boards">
     WELCOME TO THE BOARDS!!!
+    <LogoutButton></LogoutButton>
     <form @submit.prevent="addBoard">
       <input type="text" placeholder="title" v-model="newBoard.title" required>
       <input type="text" placeholder="description" v-model="newBoard.description">
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+  import LogoutButton from '../components/LogoutButton'
   export default {
     name: "boards",
     mounted() {
@@ -36,6 +38,9 @@
         this.$store.dispatch("addBoard", this.newBoard);
         this.newBoard = { title: "", description: "" };
       }
+    },
+    components: {
+      LogoutButton
     }
   };
 </script>

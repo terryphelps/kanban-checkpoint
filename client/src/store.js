@@ -15,6 +15,7 @@ let api = Axios.create({
   withCredentials: true
 })
 
+
 export default new Vuex.Store({
   state: {
     user: {},
@@ -39,6 +40,11 @@ export default new Vuex.Store({
     },
     setComments(state, comments) {
       state.comments = comments
+    },
+    resetState(state) {
+      state.user = {}
+      state.boards = []
+      state.activeBoard = {}
     }
   },
   actions: {

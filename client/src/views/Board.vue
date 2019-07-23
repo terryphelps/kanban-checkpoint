@@ -1,5 +1,6 @@
 <template>
   <div class="board">{{board.title}}
+    <LogoutButton></LogoutButton>
     <div class="container">
       <div class="row">
         <List v-for="list in lists" :key="list._id" :listId="list._id"></List>
@@ -16,6 +17,7 @@
 
 <script>
   import List from '../components/List'
+  import LogoutButton from '../components/LogoutButton'
   export default {
     name: "board",
     data() {
@@ -55,7 +57,8 @@
     },
     props: ["boardId"],
     components: {
-      List
+      List,
+      LogoutButton
     }
   };
 </script>
