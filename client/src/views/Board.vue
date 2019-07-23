@@ -50,7 +50,7 @@
     methods: {
       addList() {
         let output = this.$store.dispatch('addList', { title: this.message, boardId: this.boardId })
-        debugger
+
         this.message = ''
         return output
       }
