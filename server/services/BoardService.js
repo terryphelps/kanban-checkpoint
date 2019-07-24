@@ -16,7 +16,6 @@ _schema.pre('findOneAndRemove', function (next) {
   //lets find all the lists and remove them
   Promise.all([
     _listService.deleteMany({ boardId: this._conditions._id })
-    _
   ])
     .then(() => next())
     .catch(err => next(err))
