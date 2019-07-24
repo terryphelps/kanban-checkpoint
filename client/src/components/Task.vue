@@ -37,7 +37,7 @@
     },
     methods: {
       addComment() {
-        let output = this.$store.dispatch('addComment', { content: this.message, taskId: this.taskId, boardId: this.task.boardId })
+        let output = this.$store.dispatch('addComment', { content: this.message, listId: this.task.listId, taskId: this.taskId, boardId: this.task.boardId })
         this.message = ''
         return output
       }

@@ -1,5 +1,8 @@
 import mongoose from "mongoose"
 import _listService from './ListService'
+import _taskService from './TaskService'
+import _commentService from './CommentService'
+
 const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId
 
@@ -15,7 +18,9 @@ let _schema = new Schema({
 _schema.pre('findOneAndRemove', function (next) {
   //lets find all the lists and remove them
   Promise.all([
-    _listService.deleteMany({ boardId: this._conditions._id })
+    _listService.deleteMany({ boardId: this._conditions._id }),
+    _taskService.deleteMany({ boardId: this._conditions._id }),
+    _commentService.deleteMany({ boardId: this._conditions._id })
   ])
     .then(() => next())
     .catch(err => next(err))
