@@ -3,6 +3,7 @@
     <drag class="drag" :transfer-data="task">
       <p>{{ task.description }}
       </p>
+      <p><button class="btn btn-sm btn-danger" @click='deleteTask'>-</button></p>
       <Comment v-for="comment in comments" :key='comment._id' :commentId="comment._id"></Comment>
       <form class="border" @submit.prevent="addComment">
         <input v-model="message">
@@ -40,6 +41,10 @@
         let output = this.$store.dispatch('addComment', { content: this.message, listId: this.task.listId, taskId: this.taskId, boardId: this.task.boardId })
         this.message = ''
         return output
+      },
+      deleteTask() {
+        let payload = { taskId: this.taskId, boardId: this.task.boardId }
+        return this.$store.dispatch('deleteTask', payload)
       }
     },
     components: {

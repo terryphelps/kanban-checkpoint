@@ -2,6 +2,7 @@
   <div class="List col-3 border">
     <drop class="drop" @drop="handleDrop">
       <p>{{list.title}}</p>
+      <p><button class="btn btn-sm btn-danger" @click='deleteList'>-</button></p>
       <Task v-for='task in tasks' :key="task._id" :taskId="task._id"></Task>
       <form class="border" @submit.prevent="addTask">
         <input v-model="message">
@@ -46,6 +47,10 @@
         task.listId = this.listId
 
         this.$store.dispatch("setTask", task)
+      },
+      deleteList() {
+        let payload = { listId: this.listId, boardId: this.list.boardId }
+        return this.$store.dispatch('deleteList', payload)
       }
     },
     components: {

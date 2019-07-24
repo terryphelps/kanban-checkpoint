@@ -1,6 +1,7 @@
 <template>
   <div class="board">{{board.title}}
     <LogoutButton></LogoutButton>
+    <p><button class="btn btn-sm btn-danger" @click='deleteBoard'>Delete Board</button></p>
     <div class="container">
       <div class="row">
         <List v-for="list in lists" :key="list._id" :listId="list._id"></List>
@@ -53,6 +54,10 @@
 
         this.message = ''
         return output
+      },
+      deleteBoard() {
+        let payload = { boardId: this.boardId }
+        return this.$store.dispatch('deleteBoard', payload)
       }
     },
     props: ["boardId"],

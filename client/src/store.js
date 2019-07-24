@@ -93,6 +93,13 @@ export default new Vuex.Store({
           dispatch('getBoards')
         })
     },
+    deleteBoard({ commit, dispatch }, payload) {
+      api.delete('boards/' + payload.boardId)
+        .then(res => {
+          dispatch('getBoards')
+          router.push({ name: "boards" })
+        })
+    },
     //#endregion
 
     //#region -- LISTS --
@@ -106,6 +113,12 @@ export default new Vuex.Store({
       api.post('lists', listData)
         .then(res => {
           dispatch('getLists', listData.boardId)
+        })
+    },
+    deleteList({ commit, dispatch }, payload) {
+      api.delete('lists/' + payload.listId)
+        .then(res => {
+          dispatch('getLists', payload.boardId)
         })
     },
     //#endregion
@@ -127,6 +140,12 @@ export default new Vuex.Store({
       api.put('tasks/' + taskData._id, taskData)
         .then(res => {
           dispatch('getTasks', taskData.boardId)
+        })
+    },
+    deleteTask({ commit, dispatch }, payload) {
+      api.delete('tasks/' + payload.taskId)
+        .then(res => {
+          dispatch('getTasks', payload.boardId)
         })
     },
     //#endregion
