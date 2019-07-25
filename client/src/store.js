@@ -73,7 +73,9 @@ export default new Vuex.Store({
       if (index == -1) {
         state.tasks.push(task)
       } else {
-        state.tasks[index] = task
+
+        Vue.set(state.tasks, index, task)
+
       }
     },
     deleteTask(state, task) {
