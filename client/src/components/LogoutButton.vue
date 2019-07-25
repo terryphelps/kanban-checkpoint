@@ -25,5 +25,8 @@
 
 
 <style scoped>
-
+  .btn {
+    padding: 0px;
+    margin-bottom: 10px;
+  }
 </style>

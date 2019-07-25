@@ -2,10 +2,15 @@ import express from 'express'
 import cors from 'cors'
 import bp from 'body-parser'
 import DbContext from "./db/dbconfig"
-const server = express()
+import Socket from "./socket"
+
+const server = require('express')()
+const socketServer = require("http").createServer(server)
+const io = require('socket.io')(socketServer)
 
 //Fire up database connection
 DbContext.connect()
+Socket.setIO(io)
 
 //Sets the port to Heroku's, and the files to the built project 
 var port = process.env.PORT || 3000
@@ -62,6 +67,6 @@ server.use('*', (req, res, next) => {
 })
 
 
-server.listen(port, () => {
+socketServer.listen(port, () => {
   console.log('server running on port', port)
 })

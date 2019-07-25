@@ -11,6 +11,7 @@ Vue.component('drop', Drop);
 //Vue.config.productionTip = false
 
 async function init() {
+
   let user = await AuthService.Authenticate()
   if (user) { store.commit("setUser", user) }
   else { router.push({ name: 'login' }) }
@@ -20,4 +21,5 @@ async function init() {
     render: h => h(App)
   }).$mount('#app')
 }
+store.dispatch('initializeSocket')
 init()

@@ -1,14 +1,17 @@
 <template>
   <div class="boards">
-    WELCOME TO THE BOARDS!!!
+    <h2>WELCOME TO THE BOARDS!!!</h2>
     <LogoutButton></LogoutButton>
-    <form @submit.prevent="addBoard">
+    <form class="formData" @submit.prevent="addBoard">
       <input type="text" placeholder="title" v-model="newBoard.title" required>
       <input type="text" placeholder="description" v-model="newBoard.description">
       <button type="submit">Create Board</button>
     </form>
     <div v-for="board in boards" :key="board._id">
-      <router-link :to="{name: 'board', params: {boardId: board._id}}">{{board.title}}</router-link>
+      <h2>
+        <router-link :to="{name: 'board', params: {boardId: board._id}}">{{board.title}}</router-link>
+      </h2>
+      <p>{{board.description}}</p>
     </div>
   </div>
 </template>
@@ -44,3 +47,12 @@
     }
   };
 </script>
+<style>
+  h2 {
+    font-weight: bolder;
+  }
+
+  .formData {
+    margin-bottom: 10px;
+  }
+</style>

@@ -37,6 +37,8 @@
       if (this.$store.state.boards.length == 0) {
         this.$store.dispatch("getBoards")
       }
+      this.$store.dispatch("joinRoom", this.boardId)
+
     },
     computed: {
       board() {

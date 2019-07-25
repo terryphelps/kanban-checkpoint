@@ -3,6 +3,9 @@ import Vuex from 'vuex'
 import Axios from 'axios'
 import router from './router'
 import AuthService from './AuthService'
+import io from 'socket.io-client'
+
+let socket = {}
 
 Vue.use(Vuex)
 
@@ -40,6 +43,12 @@ export default new Vuex.Store({
     },
     setComments(state, comments) {
       state.comments = comments
+    },
+    addComment(state, comment) {
+      let index = state.comments.findIndex(el => el._id == comment._id)
+      if (index == -1) {
+        state.comments.push(comment)
+      }
     },
     resetState(state) {
       state.user = {}
@@ -172,9 +181,6 @@ export default new Vuex.Store({
     },
     addComment({ commit, dispatch }, commentData) {
       api.post('comments', commentData)
-        .then(res => {
-          dispatch('getComments', commentData.boardId)
-        })
     },
     deleteComment({ commit, dispatch }, payload) {
       api.delete('comments/' + payload.commentId)
@@ -191,7 +197,37 @@ export default new Vuex.Store({
         .then(res => {
           commit('setUsers', res.data)
         })
+    },
+    //#endregion
+
+    //#region -- SOCKETS --
+    initializeSocket({ commit, dispatch }) {
+      // establish socket connection 
+      socket = io.connect(base)
+
+      // handle connection events
+      socket.on('CONNECTED', data => {
+        console.log('Connected to socket: ' + data.socket)
+        console.log("message: " + data.message)
+
+      })
+
+      //register listeners
+      socket.on('comment', data => {
+        commit('addComment', data)
+      })
+
+      socket.on('newMember', ({ name }) => console.log({ name }))
+    },
+
+    joinRoom({ commit, dispatch, state }, boardId) {
+      socket.emit('join', { boardId })
+    },
+
+    leaveRoom({ commit, dispatch }, boardId) {
+      socket.emit('leave', { boardId })
     }
+    //#endregion
 
   }
 })

@@ -1,6 +1,7 @@
 import _commentService from '../services/CommentService'
 import express from 'express'
 import { Authorize } from '../middleware/authorize.js'
+import socket from '../socket/index'
 
 export default class CommentController {
   constructor() {
@@ -36,6 +37,7 @@ export default class CommentController {
     try {
       req.body.authorId = req.session.uid
       let data = await _commentService.create(req.body)
+      socket.notifyComment(data)
       return res.status(201).send(data)
     } catch (error) { next(error) }
   }
