@@ -50,6 +50,39 @@ export default new Vuex.Store({
         state.comments.push(comment)
       }
     },
+    deleteComment(state, comment) {
+      let index = state.comments.findIndex(el => el._id == comment._id)
+      if (index !== -1) {
+        state.comments.splice(index, 1)
+      }
+    },
+    addList(state, list) {
+      let index = state.lists.findIndex(el => el._id == list._id)
+      if (index == -1) {
+        state.lists.push(list)
+      }
+    },
+    deleteList(state, list) {
+      let index = state.lists.findIndex(el => el._id == list._id)
+      if (index !== -1) {
+        state.lists.splice(index, 1)
+      }
+    },
+    addTask(state, task) {
+      let index = state.tasks.findIndex(el => el._id == task._id)
+      if (index == -1) {
+        state.tasks.push(task)
+      } else {
+        state.tasks[index] = task
+      }
+    },
+    deleteTask(state, task) {
+      let index = state.tasks.findIndex(el => el._id == task._id)
+      if (index !== -1) {
+        state.tasks.splice(index, 1)
+      }
+    },
+
     resetState(state) {
       state.user = {}
       state.boards = []
@@ -133,15 +166,9 @@ export default new Vuex.Store({
     },
     addList({ commit, dispatch }, listData) {
       api.post('lists', listData)
-        .then(res => {
-          dispatch('getLists', listData.boardId)
-        })
     },
     deleteList({ commit, dispatch }, payload) {
       api.delete('lists/' + payload.listId)
-        .then(res => {
-          dispatch('getLists', payload.boardId)
-        })
     },
     //#endregion
 
@@ -154,21 +181,12 @@ export default new Vuex.Store({
     },
     addTask({ commit, dispatch }, taskData) {
       api.post('tasks', taskData)
-        .then(res => {
-          dispatch('getTasks', taskData.boardId)
-        })
     },
     setTask({ commit, dispatch }, taskData) {
       api.put('tasks/' + taskData._id, taskData)
-        .then(res => {
-          dispatch('getTasks', taskData.boardId)
-        })
     },
     deleteTask({ commit, dispatch }, payload) {
       api.delete('tasks/' + payload.taskId)
-        .then(res => {
-          dispatch('getTasks', payload.boardId)
-        })
     },
     //#endregion
 
@@ -184,9 +202,6 @@ export default new Vuex.Store({
     },
     deleteComment({ commit, dispatch }, payload) {
       api.delete('comments/' + payload.commentId)
-        .then(res => {
-          dispatch('getComments', payload.boardId)
-        })
     },
     //#endregion
 
@@ -216,7 +231,21 @@ export default new Vuex.Store({
       socket.on('comment', data => {
         commit('addComment', data)
       })
-
+      socket.on('deleteComment', data => {
+        commit('deleteComment', data)
+      })
+      socket.on('task', data => {
+        commit('addTask', data)
+      })
+      socket.on('deleteTask', data => {
+        commit('deleteTask', data)
+      })
+      socket.on('List', data => {
+        commit('addList', data)
+      })
+      socket.on('deleteList', data => {
+        commit('deleteList', data)
+      })
       socket.on('newMember', ({ name }) => console.log({ name }))
     },
 

@@ -2,6 +2,7 @@ import _listService from '../services/ListService'
 import express from 'express'
 import { Authorize } from '../middleware/authorize.js'
 import _taskService from '../services/TaskService'
+import socket from '../socket/index'
 
 export default class ListController {
   constructor() {
@@ -45,13 +46,15 @@ export default class ListController {
     try {
       req.body.authorId = req.session.uid
       let data = await _listService.create(req.body)
+      socket.notifyList(data)
       return res.status(201).send(data)
     } catch (error) { next(error) }
   }
 
   async delete(req, res, next) {
     try {
-      await _listService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      let { boardId } = await _listService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      socket.notifyDeleteList({ _id: req.params.id, boardId })
       return res.send("Successfully deleted")
     } catch (error) { next(error) }
   }

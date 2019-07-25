@@ -2,6 +2,7 @@ import _taskService from '../services/TaskService'
 import express from 'express'
 import { Authorize } from '../middleware/authorize.js'
 import _commentService from '../services/CommentService'
+import socket from '../socket/index'
 
 export default class TaskController {
   constructor() {
@@ -46,6 +47,7 @@ export default class TaskController {
     try {
       req.body.authorId = req.session.uid
       let data = await _taskService.create(req.body)
+      socket.notifyTask(data)
       return res.status(201).send(data)
     } catch (error) { next(error) }
   }
@@ -54,6 +56,7 @@ export default class TaskController {
     try {
       let data = await _taskService.findOneAndUpdate({ _id: req.params.id, authorId: req.session.uid }, req.body, { new: true })
       if (data) {
+        socket.notifyTask(data)
         return res.send(data)
       }
       throw new Error("invalid id")
@@ -62,7 +65,8 @@ export default class TaskController {
 
   async delete(req, res, next) {
     try {
-      await _taskService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      let { boardId } = await _taskService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      socket.notifyDeleteTask({ _id: req.params.id, boardId })
       return res.send("Successfully deleted")
     } catch (error) { next(error) }
   }

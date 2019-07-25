@@ -30,8 +30,23 @@ class Socket {
   leaveRoom(data) {
     this.io.leave(data.boardId);
   }
+  notifyList(list) {
+    this.io.to(list.boardId).emit('list', list)
+  }
+  notifyDeleteList(list) {
+    this.io.to(list.boardId).emit('deleteList', list)
+  }
+  notifyTask(task) {
+    this.io.to(task.boardId).emit('task', task)
+  }
+  notifyDeleteTask(task) {
+    this.io.to(task.boardId).emit('deleteTask', task)
+  }
   notifyComment(comment) {
     this.io.to(comment.boardId).emit('comment', comment)
+  }
+  notifyDeleteComment(comment) {
+    this.io.to(comment.boardId).emit('deleteComment', comment)
   }
 
 }

@@ -29,6 +29,7 @@ export default class CommentController {
   async getById(req, res, next) {
     try {
       let data = await _commentService.findOne({ _id: req.params.id, authorId: req.session.uid })
+
       return res.send(data)
     } catch (error) { next(error) }
   }
@@ -44,7 +45,9 @@ export default class CommentController {
 
   async delete(req, res, next) {
     try {
-      await _commentService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      // @ts-ignore
+      let { boardId } = await _commentService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      socket.notifyDeleteComment({ _id: req.params.id, boardId })
       return res.send("Successfully deleted")
     } catch (error) { next(error) }
   }
