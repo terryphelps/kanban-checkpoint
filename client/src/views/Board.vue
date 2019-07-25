@@ -1,5 +1,9 @@
 <template>
-  <div class="board">{{board.title}}
+  <div class="board">
+    <p>{{board.title}}</p>
+    <router-link v-if="permitCollabs" tag="button" class="btn btn-secondary btn-sm"
+      :to="{name: 'collab', params: {boardId: boardId}}">Edit Collaborators
+    </router-link>
     <LogoutButton></LogoutButton>
     <p><button class="btn btn-sm btn-danger" @click='deleteBoard'>Delete Board</button></p>
     <div class="container">
@@ -46,6 +50,9 @@
       lists() {
 
         return this.$store.state.lists
+      },
+      permitCollabs() {
+        return this.board.authorId == this.$store.state.user._id
       }
     },
     methods: {

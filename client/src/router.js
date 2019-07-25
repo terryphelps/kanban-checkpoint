@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Boards from './views/Boards.vue'
 import Board from './views/Board.vue'
 import Login from './views/Login.vue'
+import Collab from './views/Collab.vue'
 
 Vue.use(Router)
 
@@ -12,6 +13,12 @@ export default new Router({
       path: '/',
       name: 'boards',
       component: Boards
+    },
+    {
+      path: '/boards/:boardId/collab',
+      name: 'collab',
+      props: true,
+      component: Collab
     },
     {
       path: '/boards/:boardId',

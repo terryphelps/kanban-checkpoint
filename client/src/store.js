@@ -15,7 +15,6 @@ let api = Axios.create({
   withCredentials: true
 })
 
-
 export default new Vuex.Store({
   state: {
     user: {},
@@ -23,7 +22,8 @@ export default new Vuex.Store({
     lists: [],
     tasks: [],
     comments: [],
-    activeBoard: {}
+    activeBoard: {},
+    users: []
   },
   mutations: {
     setUser(state, user) {
@@ -44,8 +44,16 @@ export default new Vuex.Store({
     resetState(state) {
       state.user = {}
       state.boards = []
+      state.lists = []
+      state.tasks = []
+      state.comments = []
       state.activeBoard = {}
+      state.users = []
+    },
+    setUsers(state, users) {
+      state.users = users
     }
+
   },
   actions: {
     //#region -- AUTH STUFF --
@@ -79,7 +87,6 @@ export default new Vuex.Store({
     },
     //#endregion
 
-
     //#region -- BOARDS --
     getBoards({ commit, dispatch }) {
       api.get('boards')
@@ -90,6 +97,12 @@ export default new Vuex.Store({
     addBoard({ commit, dispatch }, boardData) {
       api.post('boards', boardData)
         .then(serverBoard => {
+          dispatch('getBoards')
+        })
+    },
+    setBoard({ commit, dispatch }, payload) {
+      api.put('boards/' + payload._id, payload)
+        .then(res => {
           dispatch('getBoards')
         })
     },
@@ -168,7 +181,17 @@ export default new Vuex.Store({
         .then(res => {
           dispatch('getComments', payload.boardId)
         })
-    }
+    },
     //#endregion
+
+
+    //#region -- USERS --
+    getUsers({ commit, dispatch }) {
+      api.get('users/')
+        .then(res => {
+          commit('setUsers', res.data)
+        })
+    }
+
   }
 })

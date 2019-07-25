@@ -28,7 +28,7 @@ export default class BoardsController {
   async getAll(req, res, next) {
     try {
       //only gets boards by user who is logged in
-      let data = await _boardService.find({ authorId: req.session.uid })
+      let data = await _boardService.find({ $or: [{ authorId: req.session.uid }, { collaborators: req.session.uid }] })
       return res.send(data)
     }
     catch (err) { next(err) }
@@ -36,26 +36,26 @@ export default class BoardsController {
 
   async getById(req, res, next) {
     try {
-      let data = await _boardService.findOne({ _id: req.params.id, authorId: req.session.uid })
+      let data = await _boardService.findOne({ _id: req.params.id, $or: [{ authorId: req.session.uid }, { collaborators: req.session.uid }] })
       return res.send(data)
     } catch (error) { next(error) }
   }
 
   async getBoardLists(req, res, next) {
     try {
-      let data = await _listService.find({ boardId: req.params.id, authorId: req.session.uid })
+      let data = await _listService.find({ boardId: req.params.id })
       return res.send(data)
     } catch (error) { next(error) }
   }
   async getBoardTasks(req, res, next) {
     try {
-      let data = await _taskService.find({ boardId: req.params.id, authorId: req.session.uid })
+      let data = await _taskService.find({ boardId: req.params.id })
       return res.send(data)
     } catch (error) { next(error) }
   }
   async getBoardComments(req, res, next) {
     try {
-      let data = await _commentService.find({ boardId: req.params.id, authorId: req.session.uid })
+      let data = await _commentService.find({ boardId: req.params.id })
       return res.send(data)
     } catch (error) { next(error) }
   }

@@ -11,7 +11,8 @@ const ObjectId = Schema.Types.ObjectId
 let _schema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  authorId: { type: ObjectId, ref: 'User', required: true }
+  authorId: { type: ObjectId, ref: 'User', required: true },
+  collaborators: [{ type: ObjectId, ref: 'User' }]
 }, { timestamps: true })
 
 //CASCADE ON DELETE

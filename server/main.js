@@ -40,11 +40,14 @@ import BoardController from './controllers/BoardController'
 import ListController from './controllers/ListController'
 import TaskController from './controllers/TaskController'
 import CommentController from './controllers/CommentController'
+import UserController from './controllers/UserController'
+
 
 server.use('/api/boards', new BoardController().router)
 server.use('/api/tasks', new TaskController().router)
 server.use('/api/lists', new ListController().router)
 server.use('/api/comments', new CommentController().router)
+server.use('/api/users', new UserController().router)
 
 //Default Error Handler
 server.use((error, req, res, next) => {

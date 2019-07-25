@@ -1,7 +1,7 @@
 <template>
   <div class="Comment border">
     <p>{{comment.content}}</p>
-    <p><button class="btn btn-sm btn-danger" @click='deleteComment'>-</button></p>
+    <p><button class="btn btn-sm btn-danger" @click='deleteComment'>X</button></p>
   </div>
 </template>
 
@@ -34,5 +34,7 @@
 
 
 <style scoped>
-
+  .btn {
+    border-radius: 50%
+  }
 </style>
