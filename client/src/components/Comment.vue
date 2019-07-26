@@ -1,7 +1,10 @@
 <template>
   <div class="Comment border">
-    <p>{{comment.content}}</p>
-    <p><button class="btn btn-sm btn-danger" @click='deleteComment'>X</button></p>
+    <p>Author: {{ author.name }}</p>
+    <p>{{ comment.content }}</p>
+
+    <p><button v-if="checkComment()" class="btn btn-sm btn-danger" @click='deleteComment'><i
+          class="far fa-trash-alt"></i></button></p>
   </div>
 </template>
 
@@ -15,10 +18,20 @@
     data() {
       return {}
     },
+    mounted() {
+      if (this.$store.state.users.length == 0) {
+        this.$store.dispatch("getUsers")
+      }
+    },
     computed: {
       comment() {
         return this.$store.state.comments.find(el => el._id == this.commentId) || {
           content: "Loading..."
+        }
+      },
+      author() {
+        return this.$store.state.users.find(el => el._id == this.comment.authorId) || {
+          name: "Loading..."
         }
       }
     },
@@ -26,6 +39,11 @@
       deleteComment() {
         let payload = { commentId: this.commentId, boardId: this.comment.boardId }
         return this.$store.dispatch('deleteComment', payload)
+      },
+      checkComment() {
+        let user = this.$store.state.user._id
+        let boardAuthor = this.$store.state.boards.find(el => el._id == this.comment.boardId).authorId
+        return (user == this.comment.authorId || user == boardAuthor)
       }
     },
     components: {}

@@ -35,6 +35,9 @@ export default new Vuex.Store({
     setBoards(state, boards) {
       state.boards = boards
     },
+    changeCollabs(state, board) {
+
+    },
     setLists(state, lists) {
       state.lists = lists
     },
@@ -84,6 +87,13 @@ export default new Vuex.Store({
         state.tasks.splice(index, 1)
       }
     },
+    resetBoards(state) {
+      state.boards = []
+      state.lists = []
+      state.tasks = []
+      state.comments = []
+      state.users = []
+    },
 
     resetState(state) {
       state.user = {}
@@ -96,6 +106,13 @@ export default new Vuex.Store({
     },
     setUsers(state, users) {
       state.users = users
+    },
+    setCollab(state, board) {
+      let index = state.tasks.findIndex(el => el._id == board._id)
+      if (index != -1) {
+        Vue.set(state.tasks, index, task)
+
+      }
     }
 
   },
@@ -249,6 +266,34 @@ export default new Vuex.Store({
         commit('deleteList', data)
       })
       socket.on('newMember', ({ name }) => console.log({ name }))
+      socket.on('changeCollabs', data => {
+
+        let isCollaborator = false
+        let user = this.state.user //get help?
+        let boardCollabs = data.collaborators
+        boardCollabs.push(data.authorId)
+
+        debugger
+        for (let j = 0; j < boardCollabs.length; j++) {
+          if (user._id == boardCollabs[j]) {
+            isCollaborator = true
+            break
+          }
+        }
+        if (isCollaborator) {
+          commit('changeCollabs', data)
+        }
+        else {
+          commit('resetBoards')
+          router.push({ name: "boards" })
+        }
+
+      })
+      socket.on('deleteBoard', data => {
+
+        commit('resetBoards')
+        router.push({ name: "boards" })
+      })
     },
 
     joinRoom({ commit, dispatch, state }, boardId) {

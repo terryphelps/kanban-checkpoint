@@ -4,6 +4,7 @@ import { Authorize } from '../middleware/authorize.js'
 import _listService from '../services/ListService'
 import _taskService from '../services/TaskService'
 import _commentService from '../services/CommentService'
+import socket from '../socket/index'
 
 //PUBLIC
 export default class BoardsController {
@@ -71,16 +72,21 @@ export default class BoardsController {
   async edit(req, res, next) {
     try {
       let data = await _boardService.findOneAndUpdate({ _id: req.params.id, authorId: req.session.uid }, req.body, { new: true })
+      let x = 1
       if (data) {
+        socket.notifyChangeCollabs(data)
         return res.send(data)
       }
+
+
       throw new Error("invalid id")
     } catch (error) { next(error) }
   }
 
   async delete(req, res, next) {
     try {
-      await _boardService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      let data = await _boardService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      socket.notifyDeleteBoard(data)
       return res.send("Successfully deleted")
     } catch (error) { next(error) }
   }

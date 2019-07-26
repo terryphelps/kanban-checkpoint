@@ -3,7 +3,8 @@
     <drag class="drag" :transfer-data="task">
       <p>{{ task.description }}
       </p>
-      <p><button class="btn btn-sm btn-danger" @click='deleteTask'>-</button></p>
+      <p><button v-if="checkAuthor()" class="btn btn-sm btn-danger" @click='deleteTask'><i
+            class="far fa-trash-alt"></i></button></p>
       <Comment v-for="comment in comments" :key='comment._id' :commentId="comment._id"></Comment>
       <form class="border" @submit.prevent="addComment">
         <input v-model="message">
@@ -45,6 +46,11 @@
       deleteTask() {
         let payload = { taskId: this.taskId, boardId: this.task.boardId }
         return this.$store.dispatch('deleteTask', payload)
+      },
+      checkAuthor() {
+        let user = this.$store.state.user._id
+        let boardAuthor = this.$store.state.boards.find(el => el._id == this.task.boardId).authorId
+        return (user == this.task.authorId || user == boardAuthor)
       }
     },
     components: {

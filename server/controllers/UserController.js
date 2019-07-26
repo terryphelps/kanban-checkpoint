@@ -18,7 +18,7 @@ export default class AuthController {
 
     async getUsers(req, res, next) {
         try {
-            let data = await _userService.find().select("-hash")
+            let data = await _userService.find().select("-hash").select("-email")
             return res.send(data)
         }
         catch (err) { next(err) }

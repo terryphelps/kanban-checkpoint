@@ -48,6 +48,12 @@ class Socket {
   notifyDeleteComment(comment) {
     this.io.to(comment.boardId).emit('deleteComment', comment)
   }
+  notifyChangeCollabs(board) {
+    this.io.to(board._id).emit('changeCollabs', board)
+  }
+  notifyDeleteBoard(board) {
+    this.io.to(board._id).emit('deleteBoard')
+  }
 
 }
 

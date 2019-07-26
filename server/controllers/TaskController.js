@@ -54,7 +54,7 @@ export default class TaskController {
 
   async edit(req, res, next) {
     try {
-      let data = await _taskService.findOneAndUpdate({ _id: req.params.id, authorId: req.session.uid }, req.body, { new: true })
+      let data = await _taskService.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
       if (data) {
         socket.notifyTask(data)
         return res.send(data)
