@@ -41,9 +41,12 @@
         return this.$store.dispatch('deleteComment', payload)
       },
       checkComment() {
-        let user = this.$store.state.user._id
-        let boardAuthor = this.$store.state.boards.find(el => el._id == this.comment.boardId).authorId
-        return (user == this.comment.authorId || user == boardAuthor)
+        if (this.$store.state.user._id && this.comment.boardId && this.$store.state.boards.length > 0) {
+
+          let user = this.$store.state.user._id
+          let boardAuthor = this.$store.state.boards.find(el => el._id == this.comment.boardId).authorId
+          return (user == this.comment.authorId || user == boardAuthor)
+        } else return false
       }
     },
     components: {}

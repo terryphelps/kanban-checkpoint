@@ -54,9 +54,14 @@
         return this.$store.dispatch('deleteList', payload)
       },
       checkAuthor() {
-        let user = this.$store.state.user._id
-        let boardAuthor = this.$store.state.boards.find(el => el._id == this.list.boardId).authorId
-        return (user == this.list.authorId || user == boardAuthor)
+        if (this.$store.state.user._id && this.list.boardId && this.$store.state.boards.length > 0) {
+
+          let user = this.$store.state.user._id
+          let boardAuthor = this.$store.state.boards.find(el => el._id == this.list.boardId).authorId
+
+          return (user == this.list.authorId || user == boardAuthor)
+        }
+        else return false
       }
     },
     components: {

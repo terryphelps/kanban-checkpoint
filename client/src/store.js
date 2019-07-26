@@ -259,11 +259,11 @@ export default new Vuex.Store({
       socket.on('deleteList', data => {
         commit('deleteList', data)
       })
-      socket.on('newMember', ({ name }) => console.log({ name }))
+      // socket.on('newMember', ({ name }) => console.log({ name }))
       socket.on('changeCollabs', data => {
 
         let isCollaborator = false
-        let user = this.state.user //get help?
+        let user = this.state.user
         let boardCollabs = data.collaborators
         boardCollabs.push(data.authorId)
 

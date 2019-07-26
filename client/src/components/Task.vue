@@ -48,9 +48,12 @@
         return this.$store.dispatch('deleteTask', payload)
       },
       checkAuthor() {
-        let user = this.$store.state.user._id
-        let boardAuthor = this.$store.state.boards.find(el => el._id == this.task.boardId).authorId
-        return (user == this.task.authorId || user == boardAuthor)
+        if (this.$store.state.user._id && this.task.boardId && this.$store.state.boards.length > 0) {
+
+          let user = this.$store.state.user._id
+          let boardAuthor = this.$store.state.boards.find(el => el._id == this.task.boardId).authorId
+          return (user == this.task.authorId || user == boardAuthor)
+        } else return false
       }
     },
     components: {

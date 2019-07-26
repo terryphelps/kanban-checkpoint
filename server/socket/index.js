@@ -11,7 +11,6 @@ class Socket {
       })
       socket.on("join", data => {
         this.joinRoom(socket, data)
-        console.log("hi")
       })
     });
   }
