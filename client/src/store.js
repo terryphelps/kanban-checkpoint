@@ -163,16 +163,10 @@ export default new Vuex.Store({
     },
     setBoard({ commit, dispatch }, payload) {
       api.put('boards/' + payload._id, payload)
-        .then(res => {
-          dispatch('getBoards')
-        })
+
     },
     deleteBoard({ commit, dispatch }, payload) {
       api.delete('boards/' + payload.boardId)
-        .then(res => {
-          dispatch('getBoards')
-          router.push({ name: "boards" })
-        })
     },
     //#endregion
 
@@ -273,7 +267,7 @@ export default new Vuex.Store({
         let boardCollabs = data.collaborators
         boardCollabs.push(data.authorId)
 
-        debugger
+
         for (let j = 0; j < boardCollabs.length; j++) {
           if (user._id == boardCollabs[j]) {
             isCollaborator = true
