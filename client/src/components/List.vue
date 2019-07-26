@@ -2,7 +2,7 @@
   <div class="List col-3 border">
     <drop class="drop" @drop="handleDrop">
       <p>{{list.title}}</p>
-      <p><button class="btn btn-sm btn-danger" @click='deleteList' v-if="checkAuthor()"><i
+      <p><button class="del btn btn-sm btn-danger" @click='deleteList' v-if="checkAuthor()"><i
             class="far fa-trash-alt"></i></button></p>
       <Task v-for='task in tasks' :key="task._id" :taskId="task._id"></Task>
       <form class="border" @submit.prevent="addTask">
@@ -71,5 +71,11 @@
 </script>
 
 <style scoped>
+  .List {
+    background-color: aqua;
+  }
 
+  .del {
+    border-radius: 50%;
+  }
 </style>

@@ -3,12 +3,12 @@
     <drag class="drag" :transfer-data="task">
       <p>{{ task.description }}
       </p>
-      <p><button v-if="checkAuthor()" class="btn btn-sm btn-danger" @click='deleteTask'><i
+      <p><button v-if="checkAuthor()" class="del btn btn-sm btn-danger" @click='deleteTask'><i
             class="far fa-trash-alt"></i></button></p>
       <Comment v-for="comment in comments" :key='comment._id' :commentId="comment._id"></Comment>
       <form class="border" @submit.prevent="addComment">
         <input v-model="message">
-        <button class="btn">Add Comment</button>
+        <button class="add btn">Add Comment</button>
       </form>
     </drag>
   </div>
@@ -64,5 +64,11 @@
 
 
 <style scoped>
+  .Task {
+    background-color: rgb(0, 255, 115);
+  }
 
+  .del {
+    border-radius: 50%;
+  }
 </style>

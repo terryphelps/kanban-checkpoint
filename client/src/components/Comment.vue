@@ -55,7 +55,11 @@
 
 
 <style scoped>
+  .Comment {
+    background-color: rgb(250, 255, 0);
+  }
+
   .btn {
-    border-radius: 50%
+    border-radius: 50%;
   }
 </style>

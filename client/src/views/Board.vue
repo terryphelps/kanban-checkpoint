@@ -1,11 +1,11 @@
 <template>
   <div class="board">
-    <p>{{board.title}}</p>
+    <p class="board">{{board.title}}</p>
     <router-link v-if="permitCollabs" tag="button" class="btn btn-secondary btn-sm"
       :to="{name: 'collab', params: {boardId: boardId}}">Edit Collaborators
     </router-link>
     <LogoutButton></LogoutButton>
-    <p><button class="btn btn-sm btn-danger" @click='deleteBoard'>Delete Board</button></p>
+    <p><button v-if="checkAuthor()" class="btn btn-sm btn-danger" @click='deleteBoard'>Delete Board</button></p>
     <div class="container">
       <div class="row">
         <List v-for="list in lists" :key="list._id" :listId="list._id"></List>
@@ -67,6 +67,16 @@
       deleteBoard() {
         let payload = { boardId: this.boardId }
         return this.$store.dispatch('deleteBoard', payload)
+      },
+      checkAuthor() {
+        if (this.$store.state.user._id && this.$store.state.boards.length > 0) {
+
+          let user = this.$store.state.user._id
+          let boardAuthor = this.board.authorId
+
+          return (user == boardAuthor)
+        }
+        else return false
       }
     },
     props: ["boardId"],
